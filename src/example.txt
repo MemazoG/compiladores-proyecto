@@ -1,0 +1,63 @@
+program example;
+
+class padre {
+    var st nombre;
+
+    fun vo writeNombre() {
+        wr("El nombre es ", nombre);
+    }
+}
+
+class hijo -> padre {
+    var in edad;
+
+    fun vo pelos() {
+        wr("Pelos");
+    }
+}
+
+
+--DEC VARIABLES--
+var in a, b, c[3], d, cont;
+var hijo h;
+
+
+--DEC FUNCIONES--
+fun flt divEntre2(in num) {
+    rt num/2;
+}
+
+fun vo mayor(in num1, in num2) {
+    if (num1 > num2) {
+        wr(num1, " es mayor");
+    } elif (num2 > num1) {
+        wr(num2, " es mayor");
+    } else {
+        wr("Son iguales");
+    }
+}
+
+fun vo main () {
+    a = 10;
+    b = 5;
+    c[0] = 1;
+    c[1] = 5;
+    c[3] = 15;
+
+    wr("Ingrese el valor de d");
+    rd(d);
+    h.edad = d;
+
+    cont = 3;
+    wh(cont > 0) {
+        h.pelos();
+        cont = cont - 1;
+    }
+
+    wr("10 entre 2 es ", divEntre2(a));
+
+    fo(cont = 1; cont <= 3; cont = cont + 1) {
+        mayor(b, c[cont]);
+    }
+
+}
