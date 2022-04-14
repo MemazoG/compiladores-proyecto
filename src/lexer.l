@@ -70,7 +70,7 @@ whitespace (" " | \t | \n | \r)
 "["                     { return LSB; }
 "]"                     { return RSB; }
 
-{whitespace}            {return WS; }
+{whitespace}            {return ; }
 
 [\t]                    ;*/
 [\n]                    line++;
