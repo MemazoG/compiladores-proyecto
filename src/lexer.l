@@ -75,7 +75,7 @@ whitespace (" " | [\t] | [\n] | [\r])
 "&&"                    { return AND; }
 
 \/\/.*                  ;
-[ \t]*                    ;
+[ \t]*                  ;
 [\n]                    line++;
 
 %%
