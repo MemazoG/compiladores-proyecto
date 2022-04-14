@@ -17,12 +17,10 @@ class hijo -> padre {
 }
 
 
---DEC VARIABLES--
 var in a, b, c[3], d, cont;
 var hijo h;
 
 
---DEC FUNCIONES--
 fun flt divEntre2(in num) {
     rt num/2;
 }
