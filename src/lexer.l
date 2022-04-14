@@ -10,7 +10,8 @@ letter [a-zA-Z]
 digit [0-9]
 digits (digit)+
 id [a-z][a-z0-9]*
-whitespace (" " | \t | \n | \r)
+whitespace (" " | [\t] | [\n] | [\r])
+
 %%
 "program"               { return PROGRAM; }
 "var"                   { return VAR; }
@@ -70,12 +71,20 @@ whitespace (" " | \t | \n | \r)
 "["                     { return LSB; }
 "]"                     { return RSB; }
 
-{whitespace}            {return ; }
+"||"                    { return OR; }
+"&&"                    { return AND; }
 
-[\t]                    ;*/
+\/\/.*                  ;
+[ \t]*                  ;
 [\n]                    line++;
 
 %%
+
+// tal vez es necesario agregar estas reglas arriba
+// [\t]                    ;*/
+// [\n]                    line++;
+// {whitespace}            ;
+
 
 // int yywrap(){
 //     return 1;

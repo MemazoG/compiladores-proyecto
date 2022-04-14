@@ -7,3 +7,4 @@ parser.tab.c
 parser.tab.h
 .lexer.l.kate-swp
 .parser.y.kate-swp
+iwtd

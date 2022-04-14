@@ -2,8 +2,8 @@ program example;
 
 class padre {
     var st nombre;
-
-    fun vo writeNombre() {
+    // originalmente se llamaba writeNombre pero detecta el wr de write como la palabra reservada, se debe de arreglar eso
+    fun vo nom() {
         wr("El nombre es ", nombre);
     }
 }
@@ -21,7 +21,7 @@ var in a, b, c[3], d, cont;
 var hijo h;
 
 
-fun flt divEntre2(in num) {
+fun flt doh(in num) {
     rt num/2;
 }
 
