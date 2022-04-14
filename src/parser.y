@@ -1,0 +1,140 @@
+%{
+    #include <cstdio>
+    #include <iostream>
+    #define YYERROR_VERBOSE 1
+    using namespace std;
+//     #include "lex.yy.c"
+    extern int yylineno;
+    extern int yylex();
+    extern int yyparse();
+    extern FILE *yyin;
+
+    void yyerror(const char *s);
+//     int yywrap();
+%}
+
+%token PROGRAM VAR CLASS INHERIT MAIN
+%token INT FLOAT STRING CHAR
+%token FUN VOID RETURN
+%token IF ELIF ELSE
+%token WHILE FOR
+%token READ WRITE
+%token CTE_INT CTE_FLT CTE_CHR CTE_STR
+%token ID
+%token DOT COMMA CLN SMCLN
+%token ADD SUB MULT DIV
+%token G_ET L_ET EQ NEQ GT LT ASGN
+%token LP RP LCB RCB LSB RSB
+// %token WS
+
+%%
+PROGRAMA: PROGRAM ID SMCLN DEC_CLASES DEC_VARIABLES DEC_FUNCIONES DEC_MAIN;
+
+DEC_CLASES: CLASE DEC_CLASES
+| ;
+
+CLASE: CLASS ID CLASE_HEREDA LCB DEC_ATRIBUTOS DEC_METODOS RCB
+| ;
+
+CLASE_HEREDA: INHERIT ID
+| ;
+
+DEC_ATRIBUTOS: VARIABLES DEC_ATRIBUTOS
+| ;
+
+VARIABLES: VAR TIPO_SIMPLE ID VAR_ARR VAR_MULTIPLE
+| VAR ID ID VAR_ARR VAR_MULTIPLE;
+
+VAR_ARR: LSB ID RSB VAR_MAT
+| LSB CTE_INT RSB VAR_MAT
+| ;
+
+VAR_MAT: LSB ID RSB
+| LSB CTE_INT RSB
+| ;
+
+VAR_MULTIPLE: ID VAR_ARR VAR_MULTIPLE
+| ;
+
+TIPO_SIMPLE: INT
+|FLOAT
+|STRING
+|CHAR;
+
+
+
+// PROGRAMA: PROG ID SMCLN VARS BLOQUE
+// | PROG ID SMCLN BLOQUE;
+//
+// VARS: VAR ID VARS2 CLN TIPO SMCLN VARS3 ;
+// VARS2: COMMA ID VARS2
+// | ;
+// VARS3: ID VARS2 CLN TIPO SMCLN VARS3
+// | ;
+//
+// BLOQUE: LCB ESTATUTO BLOQUE2 RCB;
+// BLOQUE2: ESTATUTO BLOQUE2
+// | ;
+//
+// TIPO : INT | FLOAT;
+//
+// ESTATUTO: ASIGNACION
+// | CONDICION
+// | ESCRITURA;
+//
+// ASIGNACION: ID ASGN EXPRESION SMCLN;
+//
+// CONDICION: IF LP EXPRESION RP BLOQUE CONDICION2 SMCLN;
+// CONDICION2: ELSE BLOQUE
+// | ;
+//
+// ESCRITURA: PRINT LP EXPRESION ESCRITURA2 RP SMCLN
+// | PRINT LP STRING_CONST ESCRITURA2 RP SMCLN;
+// ESCRITURA2: EXPRESION ESCRITURA2
+// | STRING_CONST ESCRITURA2
+// | ;
+
+EXPRESION: EXP EXPRESION2;
+EXPRESION2: GT EXP
+| LT EXP
+| EQ EXP
+| ;
+
+EXP: TERMINO EXP2;
+EXP2: ADD TERMINO EXP2
+| SUB TERMINO EXP2
+| ;
+
+TERMINO: FACTOR TERMINO2;
+TERMINO2: MULT FACTOR TERMINO2
+| DIV FACTOR TERMINO2
+| ;
+
+FACTOR: LP EXPRESION RP
+| ADD VAR_CTE
+| SUB VAR_CTE
+| VAR_CTE;
+
+VAR_CTE: ID | INT_NUM | FLOAT_NUM;
+
+%%
+
+int main(int, char** c){
+//     cout << c[1] << endl;
+    FILE *myfile = fopen(c[1], "r");
+    if(!myfile){
+        cout << "Can't open file" << endl;
+        return -1;
+    }
+
+    yyin = myfile;
+    yyparse();
+
+    return 0;
+}
+
+void yyerror(const char *s){
+    cout << "parsing error: " << s << " on line: " << yylineno << endl;
+
+    exit(-1);
+}
