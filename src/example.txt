@@ -3,7 +3,7 @@ program example;
 class padre {
     var st nombre;
     // originalmente se llamaba writeNombre pero detecta el wr de write como la palabra reservada, se debe de arreglar eso
-    fun vo nom() {
+    fun vo writeNombre() {
         wr("El nombre es ", nombre);
     }
 }
@@ -35,12 +35,14 @@ fun vo mayor(in num1, in num2) {
     }
 }
 
-fun vo main () {
+main () {
+    var in lala;
+    var in laa;
     a = 10;
     b = 5;
     c[0] = 1;
     c[1] = 5;
-    c[3] = 15;
+    c[3] = mayor(1, 2);
 
     wr("Ingrese el valor de d");
     rd(d);
@@ -51,7 +53,7 @@ fun vo main () {
         h.pelos();
         cont = cont - 1;
     }
-
+    divEntre2(a);
     wr("10 entre 2 es ", divEntre2(a));
 
     fo(cont = 1; cont <= 3; cont = cont + 1) {

@@ -9,7 +9,7 @@
 letter [a-zA-Z]
 digit [0-9]
 digits (digit)+
-id [a-z][a-z0-9]*
+id {letter}({letter}|{digit})*
 whitespace (" " | [\t] | [\n] | [\r])
 
 %%
@@ -38,12 +38,14 @@ whitespace (" " | [\t] | [\n] | [\r])
 "rd"                    { return READ; }
 "wr"                    { return WRITE; }
 
+{id}                    { return ID; }
+
 [0-9]+                  { return CTE_INT; }
 {digits}\.{digits}      { return CTE_FLT; }
 [']{letter}|{digit}[']  { return CTE_CHR; }
 ["].*["]                { return CTE_STR; }
 
-{id}                    { return ID; }
+
 
 \.                      { return DOT; }
 ","                     { return COMMA; }
