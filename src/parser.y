@@ -1,6 +1,7 @@
 %{
     #include <cstdio>
     #include <iostream>
+    #include <string>
     #define YYERROR_VERBOSE 1
     using namespace std;
 //     #include "lex.yy.c"
@@ -13,6 +14,10 @@
 //     int yywrap();
 %}
 
+%union{
+    char* id;
+}
+
 %token PROGRAM VAR CLASS INHERIT MAIN
 %token INT FLOAT STRING CHAR
 %token FUN VOID RETURN
@@ -20,7 +25,7 @@
 %token WHILE FOR
 %token READ WRITE
 %token CTE_INT CTE_FLT CTE_CHR CTE_STR
-%token ID
+%token <id>ID
 %token DOT COMMA CLN SMCLN
 %token ADD SUB MULT DIV
 %token G_ET L_ET EQ NEQ GT LT ASGN
@@ -34,7 +39,7 @@ PROGRAMA: PROGRAM ID SMCLN DEC_CLASES DEC_ATRIBUTOS DEC_METODOS DEC_MAIN;
 DEC_CLASES: CLASE DEC_CLASES
 | ;
 
-CLASE: CLASS ID CLASE_HEREDA {cout << "encontrar clase " + $1;} LCB DEC_ATRIBUTOS DEC_METODOS RCB;
+CLASE: CLASS ID CLASE_HEREDA {cout << "encontrada clase " << $2 << "\n";} LCB DEC_ATRIBUTOS DEC_METODOS RCB;
 
 CLASE_HEREDA: INHERIT ID
 | ;
@@ -95,7 +100,7 @@ LLAMADA: FUNC_ID LP PONER_PARAM RP;
 FUNC_ID: ID
 | ID DOT ID;
 
-PONER_PARAM: EXP {cout<<"parametro 1 encontrado";} LLAMADA_MULTIPLE
+PONER_PARAM: EXP {cout<<"parametro 1 encontrado ";} LLAMADA_MULTIPLE
 | ;
 
 LLAMADA_MULTIPLE: COMMA EXP LLAMADA_MULTIPLE
