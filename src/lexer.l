@@ -1,4 +1,6 @@
 %{
+    #include <iostream>
+    #include <string>
     #include "parser.tab.h"
     int line = 1;
 %}
@@ -38,7 +40,7 @@ whitespace (" " | [\t] | [\n] | [\r])
 "rd"                    { return READ; }
 "wr"                    { return WRITE; }
 
-{id}                    { return ID; }
+{id}                    { yylval.id = (char *) strdup(yytext); return ID; }
 
 [0-9]+                  { return CTE_INT; }
 {digits}\.{digits}      { return CTE_FLT; }
