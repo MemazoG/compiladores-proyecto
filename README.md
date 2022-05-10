@@ -27,14 +27,14 @@ La parte del analizador léxico se incluye en el archivo de `lexer.h` y el anali
 De igual manera, se incluye un archivo llamado `example.txt`, el cual sirve como un ejemplo de un programa escrito en FML.
 
 ## Checklist
-[X] Léxico
-[X] Sintaxis
-[X] Tabla de símbolos (parcial)
-[X] Cubo semántico (parcial)
-[ ] Cuádruplos expresiones
-[ ] Cuádruplos estatutos lineales
-[ ] Cuádruplos estatutos condicionales
-[ ] Cuádruplos estatutos cíclicos
+- [X] Léxico
+- [X] Sintaxis
+- [X] Tabla de símbolos (parcial)
+- [X] Cubo semántico (parcial)
+- [ ] Cuádruplos expresiones
+- [ ] Cuádruplos estatutos lineales
+- [ ] Cuádruplos estatutos condicionales
+- [ ] Cuádruplos estatutos cíclicos
 
 ## Bugs arreglados
 - Problemas con id si es que contiene un substring de una palabra reservada
