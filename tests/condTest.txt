@@ -1,0 +1,12 @@
+if(A + B > C * D) {
+    A = B + D;
+}
+B = A * C;
+
+if(A + B > C * D) {
+    A = B + D;
+}
+else {
+    A = D - C;
+}
+B = A * C + D;
