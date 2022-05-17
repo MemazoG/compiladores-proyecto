@@ -1,40 +1,72 @@
 #ifndef FUNCTAB_H
 #define FUNCTAB_H
 #include <string>
-#include <symtab.h>
 #include <vector>
 #include <unordered_map>
+
+#include "symtab.h"
 
 class FunctionEntry{
 private:
     std::string name;
     char retType;
     std::string signature;
-    std::vector<SymTab> varTables;
+    SymTab varTable;
 public:
     FunctionEntry(std::string name, char retType, std::string signature);
-    void addToVarTab();
+
+    void addToVarTab(std::string id, std::string type, std::string dataType, std::string scope, int lineNum);
+
+    SymTab getVarTab(){return this->varTable;};
 };
+
+FunctionEntry::FunctionEntry(std::string name, char retType, std::string signature){
+    this->name = name;
+    this->retType = retType;
+    this->signature = signature;
+    this->varTable = SymTab(name, name);
+}
+
+void FunctionEntry::addToVarTab(std::string id, std::string type, std::string dataType, std::string scope, int lineNum){
+    this->varTable.add(id, type, dataType, scope, lineNum);
+}
 
 class FuncTab{
 private:
-    std::vector<FunctionEntry> funcEntries;
-
+    std::string name;
+    std::unordered_map<std::string, FunctionEntry> funcEntries;
 public:
-    FuncTab(std::string name, char retType);
-    void addSymTable(std::string id, std::string scope);
+    FuncTab();
+    FuncTab(std::string name);
+
+    void addFuncTable(std::string id, char retType, std::string scope);
+    void addFuncTable(FunctionEntry newEntry);
+
+    FunctionEntry getFunction(std::string id);
 };
 
-// FuncTab::FuncTab(std::string name, char retType){
-//     this->name = name;
-//     this->retType = retType;
-//     // this->varTables = new std::vector<SymTab>();
-// }
+FuncTab::FuncTab(){
+    this->name = "Default";
+    this->funcEntries = std::unordered_map<std::string, FunctionEntry>();
+}
 
-// void FuncTab::addSymTable(std::string id, std::string scope){
-//     SymTab temp = SymTab(id, scope);
-//     varTables.push_back(temp);
-// }
+FuncTab::FuncTab(std::string name){
+    this->name = name;
+    this->funcEntries = std::unordered_map<std::string, FunctionEntry>();
+}
 
+FunctionEntry FuncTab::getFunction(std::string id){
+    std::cout << id << '\n';
+    return this->funcEntries.at(id);
+}
+
+void FuncTab::addFuncTable(std::string id, char retType, std::string scope){
+    FunctionEntry temp = FunctionEntry(id, retType, scope);
+    funcEntries.insert(make_pair(id, temp));
+}
+
+void FuncTab::addFuncTable(FunctionEntry newEntry){
+//     funcEntries.insert();
+}
 
 #endif

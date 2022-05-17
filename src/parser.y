@@ -2,6 +2,12 @@
     #include <cstdio>
     #include <iostream>
     #include <string>
+    #include <unordered_map>
+
+    #include "funcTab.h"
+    #include "quadruples.h"
+
+
     #define YYERROR_VERBOSE 1
     using namespace std;
 //     #include "lex.yy.c"
@@ -10,12 +16,21 @@
     extern int yyparse();
     extern FILE *yyin;
 
+    SymTab *currScope;
+    SymTab global;
+
+    FuncTab functions;
+
     void yyerror(const char *s);
 //     int yywrap();
 %}
 
 %union{
     char* id;
+    int value;
+    int dir;
+
+//     FunctionEntry funcScope;
 }
 
 %token PROGRAM VAR CLASS INHERIT MAIN
@@ -24,7 +39,8 @@
 %token IF ELIF ELSE
 %token WHILE FOR
 %token READ WRITE
-%token CTE_INT CTE_FLT CTE_CHR CTE_STR
+%token  CTE_INT CTE_FLT
+%token CTE_CHR CTE_STR
 %token <id>ID
 %token DOT COMMA CLN SMCLN
 %token ADD SUB MULT DIV
@@ -33,8 +49,17 @@
 %token OR AND
 // %token WS
 
+%left ADD SUB MULT DIV
+%right G_ET L_ET EQ NEQ GT LT ASGN
+//
+// %type<dir> VAR_CTE
+
 %%
-PROGRAMA: PROGRAM ID SMCLN DEC_CLASES DEC_ATRIBUTOS DEC_METODOS DEC_MAIN;
+PROGRAMA: PROGRAM ID SMCLN {
+    global = SymTab("global", "global var table");
+    currScope = &global;
+    functions = FuncTab($2);
+} DEC_CLASES DEC_ATRIBUTOS DEC_METODOS DEC_MAIN;
 
 DEC_CLASES: CLASE DEC_CLASES
 | ;
@@ -47,9 +72,17 @@ CLASE_HEREDA: INHERIT ID
 DEC_ATRIBUTOS: VARIABLES DEC_ATRIBUTOS
 | ;
 
-DEC_MAIN: MAIN LP RP LCB ESTATUTOS RCB;
+DEC_MAIN: MAIN {
+    functions.addFuncTable("main", 'v', "main");
 
-VARIABLES: VAR TIPO_SIMPLE ID VAR_ARR VAR_MULTIPLE SMCLN
+    SymTab tempScope = functions.getFunction("main").getVarTab();
+    currScope = &tempScope;
+}
+LP RP LCB ESTATUTOS RCB;
+
+VARIABLES: VAR TIPO_SIMPLE ID VAR_ARR VAR_MULTIPLE SMCLN {
+    currScope->add($3, "var", "dfs", "global", yylineno);
+}
 | VAR ID ID VAR_ARR VAR_MULTIPLE SMCLN;
 
 VAR_ARR: LSB CTE_INT RSB VAR_MAT
@@ -70,7 +103,7 @@ DEC_METODOS: FUNCION DEC_METODOS
 | ;
 
 FUNCION: FUN TIPO_SIMPLE ID LP PARAMETROS RP LCB DEC_ATRIBUTOS ESTATUTOS RCB
-| FUN VOID ID LP PARAMETROS RP LCB ESTATUTOS RCB;
+| FUN VOID ID LP PARAMETROS RP LCB DEC_ATRIBUTOS ESTATUTOS RCB;
 
 PARAMETROS: TIPO_SIMPLE ID PARAMETROS_MULTIPLE
 | ;
@@ -82,7 +115,7 @@ ESTATUTOS: ESTATUTO ESTATUTOS
 | ;
 
 ESTATUTO: VARIABLES
-|ASIGNA SMCLN
+| ASIGNA SMCLN
 | LLAMADA SMCLN
 | LEE SMCLN
 | ESCRIBE SMCLN
@@ -100,7 +133,7 @@ LLAMADA: FUNC_ID LP PONER_PARAM RP;
 FUNC_ID: ID
 | ID DOT ID;
 
-PONER_PARAM: EXP {cout<<"parametro 1 encontrado ";} LLAMADA_MULTIPLE
+PONER_PARAM: EXP {cout<<"parametro 1 encontrado " ;} LLAMADA_MULTIPLE
 | ;
 
 LLAMADA_MULTIPLE: COMMA EXP LLAMADA_MULTIPLE
@@ -223,9 +256,21 @@ int main(int, char** c){
         return -1;
     }
 
+//     global.getTable();
+
     yyin = myfile;
     yyparse();
 
+//     std::unordered_map<std::string, Entry> table = global.getTable();
+//     for(auto& it: table){
+//         cout << it.second.getID() << '\n';
+//     }
+
+    std::unordered_map<std::string, Entry> tableFunctions = functions.getFunction("main").getVarTab().getTable();
+
+    for(auto& it: tableFunctions){
+        cout << it.second.getID() << '\n';
+    }
     return 0;
 }
 
@@ -233,4 +278,8 @@ void yyerror(const char *s){
     cout << "parsing error: " << s << " on line: " << yylineno << endl;
 
     exit(-1);
+}
+
+void createQuad(std::string command, std::string op1, std::string op2, std::string res){
+    cout << command << " " << op1 << " " << op2 << " " << res << '\n';
 }
